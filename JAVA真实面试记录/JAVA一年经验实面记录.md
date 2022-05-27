@@ -31,4 +31,41 @@ aparch、Tomcat、Netty
 7、线程池的执行原理？
 8、还有什么要问的吗？
 项目的模块的开发流程？ 
-## 1.3、北京宏远兴邦
+## 1.3、天津云客科技（北京）
+1、简单的自我介绍
+2、String和StringBuilder的区别？
+3、Collection和Collections区别？
+4、一段代码在遍历ArrayList时移除一个元素
+5、说出以下代码的运行结果?
+```
+public class TestLong {
+    public static void main(String[] args){
+
+        Long a=151L;
+        Long b=151L;
+        System.out.println(a==b);
+
+        long e=151;
+        long f=151;
+        System.out.println(e==f);
+
+        String s1="abc";
+        String s2="abc";
+        System.out.println("------------------------------");
+        String s3 = new String("abc");
+        String s4 = new String("abc");
+        System.out.println(s1==s2); 
+        System.out.println(s1.equals(s2));
+
+        System.out.println(s3==s4);
+        System.out.println(s3.equals(s4));
+
+        System.out.println(s1.equals(s3));
+        System.out.println(s1==s3);
+
+    }
+}
+```
+6、JAVA构造器是否可以被重写
+7、JVM内存模型
+## 1.4、博彦科技
