@@ -69,3 +69,15 @@ public class TestLong {
 6、JAVA构造器是否可以被重写
 7、JVM内存模型
 ## 1.4、博彦科技
+内网和外网？
+## 1.5、中科软
+1. JDK、JRE、JVM
+2. ==和equals?
+3. final关键字
+4. redis持久化机制？
+5. Redis实现分布式锁？
+6. MySql事务隔离级别？
+7. MySql默认的事务隔离级别？
+
+
+redis缓存击穿和雪崩？
