@@ -81,3 +81,4 @@ public class TestLong {
 
 
 redis缓存击穿和雪崩？
+session 和Cokie区别？
