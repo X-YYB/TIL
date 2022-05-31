@@ -56,5 +56,17 @@ D:\test\source>java HelloWorld
 动态绑定（Dynamic Binding）是多态的基础，也称作运行时绑定。在运行时，JVM类加载器会根据对象的类型自动的进行绑定，即自动绑定实例化对象对应的类。
 ### 5.4、方法的重载是不是多态？
 方法重载是静态绑定（Static binding）,即在编译期进行绑定。重载是不是多态没有定论，但是一般可以认为是静态多态（编译时的多态）。在Java中，多态往往是指动态多态（运行时多态）。
-
+# 热点面试题
+## 1、==和equals区别？
+答：==比较的是引用的地址，equals比较的是字符串里面的内容，一般情况下，判断字符串是否为空，会选择equals。
+## 2、String、StringBuffer、StringBuilder的区别？
+答：String是不可变对象，线程安全，效率低。
+       StringBuffer是可变对象，线程不安全，效率中等。
+       StringBuilder也是可变对象，线程不安全，效率最高。
+## 3、HashMap?
+## 4、finalize、final、finaly区别？
+## 5、volital和synchronized区别？
+## 6、SpringBoot单元测试？
+## 6、Spring三大缓存？
+## 6、Spring父子容器？
 
