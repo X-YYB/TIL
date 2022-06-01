@@ -368,3 +368,10 @@ public class EnumTest {
 }
 
 ```
+#### 1.11、JAVA创建对象的几种方式
+4种创建对象的方法：
+使用 new 关键字调用对象的构造器；
+使用 Java 反射的 newInstance() 方法；
+使用 Object 类的 clone() 方法；
+使用对象流 ObjectInputStream的readObject()方法读取序列化对象；
+
