@@ -812,3 +812,6 @@ JDK 内置的拒绝策略如下：
 双亲委派的目的是，防止加载同一个.class。通过委托去询问上级是否已经加载过该.class，如果加载过了，则不需要重新加载。
 通过委托的方式，保证核心.class不被篡改，即使被篡改也不会被加载，即使被加载也不会是同一个class对象，因为不同的加载器加载同一个.class也不是同一个Class对象。
 这样则保证了Class的执行安全
+## 5、Git
+git pull origin master --allow-unrelated-histories (该选项可以合并两个独立启动仓库的历史)
+git push -u origin master
