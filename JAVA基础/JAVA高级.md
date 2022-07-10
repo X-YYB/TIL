@@ -815,3 +815,10 @@ JDK 内置的拒绝策略如下：
 ## 5、Git
 git pull origin master --allow-unrelated-histories (该选项可以合并两个独立启动仓库的历史)
 git push -u origin master
+## 6、函数式编程
+### 6.1、函数式编程的概念
+函数式编程主要关注的是对数据进行什么操作。
+### 6.2、函数式编程的优点
+代码简洁、开发快速。
+接近自然语言，易于理解。
+易于“并发编程”。
