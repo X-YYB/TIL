@@ -829,3 +829,194 @@ git push -u origin master
 
 #### 7.1.2、分布式缓存
 如redis
+## 7、JUC
+# 1、Future接口
+## 1.1、优点：
+Future接口（FutureTask实现类）定义了操作异步任务执行的一些方法，如获取异步任务的执行结果、取消任务的执行、判断任务是否被取消、判断任务执行是否完毕等。
+Future接口可以为主线程开一个分支任务，专门为主线程处理耗时和费力的复杂业务。
+
+ 1. 处理三个任务，只用一个main线程
+
+```java
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @Description: 主线程
+ * @Author: yangyb
+ * @Date:2022/9/18 23:47
+ * Version: 1.0
+ **/
+public class FutureThreadPoolDemo {
+
+    public static void main(String[] args){
+
+        //3个任务目前只有一个main来处理？会耗时多长时间
+        long startTime = System.currentTimeMillis();
+        try {
+            TimeUnit.MILLISECONDS.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            TimeUnit.MILLISECONDS.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("共用"+(endTime-startTime)+"毫秒");
+    }
+
+}
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/45e3f9a11a484673afda02ca64c1dd20.png)
+ 2. 处理三个任务，用三个异步任务
+
+```java
+package com.company.async;
+
+import java.util.concurrent.*;
+
+/**
+ * @Description: FutureTask
+ * @Author: yangyb
+ * @Date:2022/9/14 22:06
+ * Version: 1.0
+ **/
+public class TestOne {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+
+        ExecutorService threadPool = Executors.newFixedThreadPool(3);
+
+        long startTime = System.currentTimeMillis();
+        FutureTask<String> futureTask1 = new FutureTask<>(() -> {
+            TimeUnit.MILLISECONDS.sleep(500);
+            return "task1 over";
+        });
+        threadPool.submit(futureTask1);
+        System.out.println(futureTask1.get());
+
+        FutureTask<String> futureTask2 = new FutureTask<>(() -> {
+            TimeUnit.MILLISECONDS.sleep(500);
+            return "task2 over";
+        });
+        threadPool.submit(futureTask2);
+        System.out.println(futureTask2.get());
+
+        FutureTask<String> futureTask3 = new FutureTask<>(() -> {
+            TimeUnit.MILLISECONDS.sleep(500);
+            return "task3 over";
+        });
+        threadPool.submit(futureTask3);
+        System.out.println(futureTask3.get());
+        long endTime = System.currentTimeMillis();
+        System.out.println("共用" + (endTime - startTime) + "毫秒");
+        threadPool.shutdown();
+    }
+
+}
+
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/db1b18ff71514c72a4be062ea7c2876a.png)
+## 1.2、缺点
+1、get()方法容易引起阻塞。
+
+```java
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @Description: 阻塞
+ * @Author: yangyb
+ * @Date:2022/9/19 22:13
+ * Version: 1.0
+ **/
+public class FutureAPIDemo {
+
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        FutureTask<String> futureTask = new FutureTask<>(() -> {
+            System.out.println("futureTask 启动！");
+            long startTime = System.currentTimeMillis();
+            TimeUnit.MILLISECONDS.sleep(5000);
+            long endTime = System.currentTimeMillis();
+            System.out.println(endTime-startTime);
+            return "futureTask over!";
+        });
+
+        Thread thread = new Thread(futureTask, "t1");
+        //启动线程
+        thread.start();
+        System.out.println(futureTask.get());
+        System.out.println("主线程还可以做其它的事儿吗？不好意思，做不了，futureTask没结束，main线程只能等它结束！");
+    }
+
+}
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/fd4151b1e4044130b02bb14a77eaf81d.png)
+2、isDone()轮询
+轮询的方式会耗费无所谓的CPU资源，而且也不见得能及时地得到计算结果，如果想要异步获取结果，通常都会以轮询的方式去获取结果，尽量不要阻塞。
+
+```java
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @Description: 轮询
+ * @Author: yangyb
+ * @Date:2022/9/19 22:13
+ * Version: 1.0
+ **/
+public class FutureAPIDemo {
+
+    public static void main(String[] args) {
+        FutureTask<String> futureTask = new FutureTask<>(() -> {
+            System.out.println("futureTask 启动！");
+            long startTime = System.currentTimeMillis();
+            TimeUnit.SECONDS.sleep(5);
+            long endTime = System.currentTimeMillis();
+            System.out.println(endTime - startTime);
+            return "futureTask over!";
+        });
+
+        Thread thread = new Thread(futureTask, "t1");
+        //启动线程
+        thread.start();
+        System.out.println("主线程先去做其他的事儿！");
+        while (true) {
+            if (futureTask.isDone()) {
+                try {
+                    System.out.println(futureTask.get());
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                break;
+            } else {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(500);
+                    System.out.println("正在执行。。。。");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+
+
+    }
+
+}
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/ac3b0aa291754a4f82252c38cf098f38.png)
+## 1.3、结论
+Future对于结果的获取不是很友好，只能通过阻塞或轮询的方式得到任务的结果。
